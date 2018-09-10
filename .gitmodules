@@ -1,0 +1,3 @@
+[submodule "duckling-bin/duckling"]
+	path = duckling-bin/duckling
+	url = git@github.com:facebook/duckling

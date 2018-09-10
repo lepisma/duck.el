@@ -1,0 +1,3 @@
+#+TITLE: duckling.el
+
+Minimal wrapper for [[https://github.com/facebook/duckling][duckling]] text parser.
