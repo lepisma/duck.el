@@ -29,10 +29,40 @@
 
 ;;; Code:
 
-;;;###autoload
-(defun duckling-parse (text &optional lang tz ref-time)
-  "Parse TEXT using duckling. Pass LANG, TZ (timezone) and REF-TIME as args."
-  (user-error "Not implemented"))
+(require 'json)
+
+(defcustom duckling-default-lang "en"
+  "Default language for duckling")
+
+(defcustom duckling-default-tz "Asia/Kolkata"
+  "Default timezone")
+
+(defvar duckling-process nil
+  "The cli process")
+
+(defvar duckling-process-output nil
+  "Placeholder for process output")
+
+(defun duckling-quit ()
+  (process-send-string duckling-process ":quit\n")
+  (setq duckling-process nil))
+
+(defun duckling-start ()
+  (setq duckling-process
+        (make-process :name "duckling-cli"
+                      :command '("~/.cache/duckling-cli-arch-x86-64")
+                      :filter (lambda (proc str) (setq duckling-process-output str)))))
+
+(defun duckling-parse (text &optional lang tz)
+  (if (null duckling-process)
+      (duckling-start))
+  (process-send-string duckling-process
+                       (format "%s\n"
+                               (json-encode-alist `(("text" . ,text)
+                                                    ("lang" . ,(or lang duckling-default-lang))
+                                                    ("tz" . ,(or tz duckling-default-tz))))))
+  (accept-process-output duckling-process)
+  (json-parse-string duckling-process-output :object-type 'alist))
 
 (provide 'duckling)
 
