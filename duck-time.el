@@ -26,7 +26,35 @@
 
 ;;; Code:
 
+(require 'cl-lib)
 (require 'duck-core)
+(require 'parse-time)
+
+(defun duck-time-entity-p (entity)
+  "Tell if ENTITY is of time type."
+  (string= "time" (cdr (assoc 'dim entity))))
+
+(defun duck-time-get (entity)
+  "Return the best match time from the ENTITY."
+  (let ((value (cdr (assoc 'value entity))))
+    (list (assoc 'grain value)
+          (assoc 'value value))))
+
+(defun duck-time-parse-string (duckling-string)
+  "Parse time from duckling string."
+  (cl-flet ((subs (from to)
+                  (string-to-number
+                   (substring-no-properties duckling-string from to))))
+    `((year . ,(subs 0 4))
+      (month . ,(subs 5 7))
+      (day . ,(subs 8 10))
+      (hour . ,(subs 11 13))
+      (minute . ,(subs 14 16))
+      (second . ,(subs 17 19)))))
+
+(defun duck-time-parse (&rest args)
+  (let ((res (apply #'duck-parse args)))
+    (cl-remove-if-not #'duck-time-entity-p res)))
 
 (provide 'duck-time)
 
