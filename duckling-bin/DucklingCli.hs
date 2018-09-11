@@ -29,8 +29,7 @@ import Duckling.Resolve (DucklingTime)
 
 data CliOption = CliOption { text:: Text,
                              lang:: Text,
-                             tz:: Text,
-                             refTime:: Text
+                             tz:: Text
                            } deriving Show
 
 deriveJSON defaultOptions ''CliOption
@@ -51,7 +50,7 @@ main = do
 
 parseOption :: CliOption -> HashMap Text TimeZoneSeries -> IO C8.ByteString
 parseOption opt tzs =
-  parseDuck tzs (text opt) (lang opt) Nothing (tz opt) Nothing (refTime opt) Nothing
+  parseDuck tzs (text opt) (lang opt) Nothing (tz opt) Nothing Nothing Nothing
 
 allDims :: C8.ByteString
 allDims =
@@ -61,7 +60,7 @@ allDims =
     dimText = (Text.toLower . showt) *** map (\(This d) -> toName d)
 
 parseDuck :: HashMap Text TimeZoneSeries
-          -> Text -> Text -> Maybe Text -> Text -> Maybe Text -> Text -> Maybe Text
+          -> Text -> Text -> Maybe Text -> Text -> Maybe Text -> Maybe Text -> Maybe Text
           -> IO C8.ByteString
 parseDuck tzs text lang dims tz loc reftime latent = do
   now <- liftIO $ currentReftime tzs tz
