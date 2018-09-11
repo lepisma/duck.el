@@ -37,6 +37,9 @@
 (defcustom duckling-default-tz "Asia/Kolkata"
   "Default timezone")
 
+(defcustom duckling-cli-path nil
+  "Path to cli binary")
+
 (defvar duckling-process nil
   "The cli process")
 
@@ -50,7 +53,7 @@
 (defun duckling-start ()
   (setq duckling-process
         (make-process :name "duckling-cli"
-                      :command '("~/.cache/duckling-cli-arch-x86-64")
+                      :command (list duckling-cli-path)
                       :filter (lambda (proc str) (setq duckling-process-output str)))))
 
 (defun duckling-parse (text &optional lang tz)
