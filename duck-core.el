@@ -1,15 +1,12 @@
-;;; duck-core.el --- Minimal wrapper for duckling -*- lexical-binding: t; -*-
+;;; duck-core.el --- Core function for talking to duckling -*- lexical-binding: t; -*-
 
 ;; Copyright (c) 2018 Abhinav Tushar
 
 ;; Author: Abhinav Tushar <lepisma@fastmail.com>
-;; Version: 0.0.1
-;; Package-Requires: ((emacs "25"))
-;; URL: https://github.com/lepisma/duck.el
 
 ;;; Commentary:
 
-;; Minimal wrapper for duckling
+;; Core function for talking to duckling
 ;; This file is not a part of GNU Emacs.
 
 ;;; License:
@@ -31,14 +28,9 @@
 
 (require 'json)
 
-(defcustom duck-default-lang "en"
-  "Default language for duck")
-
-(defcustom duck-default-tz "Asia/Kolkata"
-  "Default timezone")
-
-(defcustom duck-cli-path nil
-  "Path to duckling cli binary")
+(defvar duck-default-lang)
+(defvar duck-default-tz)
+(defvar duck-cli-path)
 
 (defvar duck-process nil
   "The cli process")
