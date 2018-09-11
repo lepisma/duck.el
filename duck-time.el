@@ -34,12 +34,6 @@
   "Tell if ENTITY is of time type."
   (string= "time" (cdr (assoc 'dim entity))))
 
-(defun duck-time-get (entity)
-  "Return the best match time from the ENTITY."
-  (let ((value (cdr (assoc 'value entity))))
-    (list (assoc 'grain value)
-          (assoc 'value value))))
-
 (defun duck-time-parse-string (duckling-string)
   "Parse time from duckling string."
   (cl-flet ((subs (from to)
@@ -52,9 +46,17 @@
       (minute . ,(subs 14 16))
       (second . ,(subs 17 19)))))
 
+(defun duck-time-get (entity)
+  "Return the best match time from the ENTITY."
+  (let ((value (cdr (assoc 'value entity))))
+    (list (assoc 'grain value)
+          (cons 'value (duck-time-parse-string (cdr (assoc 'value value)))))))
+
 (defun duck-time-parse (&rest args)
+  "Parse time from the given duckling arguments."
   (let ((res (apply #'duck-parse args)))
-    (cl-remove-if-not #'duck-time-entity-p res)))
+    (let ((entities (cl-remove-if-not #'duck-time-entity-p res)))
+      (mapcar #'duck-time-get entities))))
 
 (provide 'duck-time)
 
