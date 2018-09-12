@@ -26,8 +26,23 @@
 
 ;;; Code:
 
+(require 'cl-lib)
 (require 'duck-time)
 
+
+(defun duck-org-timestring (parsed-time)
+  "Return an org mode type timestring without side brackets."
+  (let* ((grain (alist-get 'grain parsed-time))
+         (value (alist-get 'value parsed-time))
+         (prefix (format "%d-%02d-%02d"
+                         (alist-get 'year value)
+                         (alist-get 'month value)
+                         (alist-get 'day value))))
+    (if (member grain '(hour minute))
+        (format "%s %02d:%02d" prefix
+                (alist-get 'hour value)
+                (alist-get 'minute value))
+      prefix)))
 
 (provide 'duck-org)
 

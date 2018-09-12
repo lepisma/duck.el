@@ -32,13 +32,11 @@
 
 (defun duck-time-entity-p (entity)
   "Tell if ENTITY is of time type."
-  (string= "time" (cdr (assoc 'dim entity))))
+  (string= "time" (alist-get 'dim entity)))
 
 (defun duck-time-parse-string (duckling-string)
   "Parse time from duckling string."
-  (cl-flet ((subs (from to)
-                  (string-to-number
-                   (substring-no-properties duckling-string from to))))
+  (cl-flet ((subs (from to) (string-to-number (substring-no-properties duckling-string from to))))
     `((year . ,(subs 0 4))
       (month . ,(subs 5 7))
       (day . ,(subs 8 10))
@@ -48,10 +46,12 @@
 
 (defun duck-time-get (entity)
   "Return the best match time from the ENTITY."
-  (let ((value (cdr (assoc 'value entity))))
-    (list (assoc 'grain value)
-          (cons 'value (duck-time-parse-string (cdr (assoc 'value value)))))))
+  (let ((value (alist-get 'value entity)))
+    `((range . ,(cons (alist-get 'start entity) (alist-get 'end entity)))
+      (grain . ,(intern (alist-get 'grain value)))
+      (value . ,(duck-time-parse-string (alist-get 'value value))))))
 
+;;;###autoload
 (defun duck-time-parse (&rest args)
   "Parse time from the given duckling arguments."
   (let ((res (apply #'duck-parse args)))
