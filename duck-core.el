@@ -59,6 +59,13 @@
   (accept-process-output duck-process)
   (json-parse-string duck-process-output :object-type 'alist))
 
+(defun duck-dims ()
+  (if (null duck-process)
+      (duck-start))
+  (process-send-string duck-process ":dims\n")
+  (accept-process-output duck-process)
+  (json-parse-string duck-process-output :object-type 'alist))
+
 (provide 'duck-core)
 
 ;;; duck-core.el ends here

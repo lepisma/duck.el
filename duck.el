@@ -30,6 +30,8 @@
 ;;; Code:
 
 (require 'duck-core)
+(require 'duck-time)
+(require 'duck-org)
 
 (defcustom duck-default-lang "en"
   "Default language for duck")
