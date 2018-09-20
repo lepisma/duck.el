@@ -55,7 +55,8 @@
                        (format "%s\n"
                                (json-encode-alist `(("text" . ,text)
                                                     ("lang" . ,(or lang duck-default-lang))
-                                                    ("tz" . ,(or tz duck-default-tz))))))
+                                                    ("tz" . ,(or tz duck-default-tz))
+                                                    ("ltnt" . t)))))
   (accept-process-output duck-process)
   (json-parse-string duck-process-output :object-type 'alist))
 
